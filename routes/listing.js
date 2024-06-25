@@ -9,7 +9,7 @@ const upload = multer({ storage: storage });
 const express = require('express');
 const { index, renderNewForm, showListing, createListing, renderEditForm, updateListing, destroyListing } = require('../controllers/listings.js');
 const router = express.Router();
-
+const {search} = require('../controllers/listings.js');
 
 
 router.get('/:id/edit', 
@@ -19,7 +19,11 @@ wrapAsync(
     renderEditForm
 ));
 
-router
+router.post('/search',
+wrapAsync(
+        search
+));
+
 
 router.get('/new', 
 isLoggedIn

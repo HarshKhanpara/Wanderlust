@@ -5,24 +5,37 @@ module.exports.index = async (req, res) => {
     res.render('listings/index.ejs', {listings: listings});
 }
 
+module.exports.search = async (req, res) => {
+    let {search} = req.body;
+    let listings = await Listing.find({$text: {$search: search}});
+    console.log(listings);
+    res.render('listings/index.ejs', {listings: listings});
+}
+
+
 module.exports.renderNewForm =  async(req, res) => {
     res.render('listings/new.ejs');
 }
 
 module.exports.showListing = async (req, res) => {
-    let listing = await Listing.findById(req.params.id).populate({path:'reviews',
+    let listing = await Listing.findById(req.params.id)
+    .populate('owner')
+    .populate({path:'reviews',
     populate: {path: 'author'}
 })
-    .populate('owner');
+    console.log("Listing: ", listing);
     if(!listing){
         req.flash('error', 'Cannot find that listing!');
         return res.redirect('/listings');
     }
+    console.log(listing);
+    console.log(listing.owner);
     res.render('listings/show.ejs', {listing: listing});
 }
 
 module.exports.createListing = async (req, res,next) => {
     if(!req.body.listing) throw new ExpressError('Invalid Listing Data', 400);
+    console.log("Recieved listing data: ", req.body.listing)
     let listing = req.body.listing;
     listing.owner = req.user._id;
     let url = req.file.path;
