@@ -63,13 +63,17 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
     let {id} = req.params;
+    console.log("id: ", id);
+    console.log("req.file: ", req.file);
     let updatedListing = await Listing.findByIdAndUpdate(id)
-    if(typeof req.file !== undefined){
-    let url = req.file.path;
-    let filename = req.file.filename;
-    updatedListing.image.url = url;
-    updatedListing.image.filename = filename;
+    //Update image if a new image is uploaded
+    if(req.file){
+        let url = req.file.path;
+        let filename = req.file.filename;
+        updatedListing.image.url = url;
+        updatedListing.image.filename = filename;
     }
+    console.log("updatedListing: ", updatedListing);                                                                                        
       updatedListing.save().then((listing) => {
           console.log('listing updated');                 
           console.log("id: ", id);

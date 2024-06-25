@@ -21,6 +21,7 @@ const users = require('./routes/user');
 
 const MONGO_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/wanderlust';
 async function main(){
+    console.log(MONGO_URL);
     await mongoose.connect(MONGO_URL);
 }
 
